@@ -174,7 +174,23 @@ export class PatientsController {
           [body.labTest, id]
         );
       }
-      this.fallbackDbService.updatePatientLabTests(id, body.labTests || []);
+      if (body.hr !== undefined) {
+        await this.databaseService.query('UPDATE patients SET hr = $1 WHERE id = $2', [Number(body.hr), id]);
+      }
+      if (body.spo2 !== undefined) {
+        await this.databaseService.query('UPDATE patients SET spo2 = $1 WHERE id = $2', [Number(body.spo2), id]);
+      }
+      if (body.status !== undefined) {
+        await this.databaseService.query('UPDATE patients SET status = $1 WHERE id = $2', [body.status, id]);
+      }
+      if (body.recovery !== undefined) {
+        await this.databaseService.query('UPDATE patients SET recovery = $1 WHERE id = $2', [Number(body.recovery), id]);
+      }
+
+      this.fallbackDbService.updatePatientVitals(id, body);
+      if (body.labTests !== undefined) {
+        this.fallbackDbService.updatePatientLabTests(id, body.labTests || []);
+      }
       return { id, ...body };
     } catch {
       if (body.labTests !== undefined) {
@@ -182,6 +198,9 @@ export class PatientsController {
       }
       if (body.labTest !== undefined) {
         this.fallbackDbService.updatePatientLabTest(id, body.labTest);
+      }
+      if (body.hr !== undefined || body.spo2 !== undefined || body.status !== undefined || body.recovery !== undefined) {
+        this.fallbackDbService.updatePatientVitals(id, body);
       }
       return { id, ...body };
     }

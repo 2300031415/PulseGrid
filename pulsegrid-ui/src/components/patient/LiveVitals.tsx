@@ -1,13 +1,31 @@
 import { Activity, Heart, Thermometer, Wind } from "lucide-react";
 
-const vitals = [
-  { label: "Heart Rate", value: "82 bpm", detail: "Normal sinus rhythm", icon: Heart, accent: "text-rose-500" },
-  { label: "SpO₂", value: "98%", detail: "Oxygen saturation stable", icon: Activity, accent: "text-teal-600" },
-  { label: "Temperature", value: "36.8°C", detail: "Within normal range", icon: Thermometer, accent: "text-amber-500" },
-  { label: "Respiration", value: "18/min", detail: "Steady breathing rate", icon: Wind, accent: "text-cyan-600" },
-];
+export default function LiveVitals({ 
+  liveVitals, 
+  status = "offline" 
+}: { 
+  liveVitals?: { hr: number; spo2: number; temp: number; resp: number }; 
+  status?: "live" | "historical" | "offline";
+}) {
+  const hasData = status !== "offline";
 
-export default function LiveVitals() {
+  const currentHR = hasData && liveVitals ? `${liveVitals.hr} bpm` : "--";
+  const currentSpO2 = hasData && liveVitals ? `${liveVitals.spo2}%` : "--";
+  const currentTemp = hasData && liveVitals ? `${liveVitals.temp.toFixed(1)}°C` : "--";
+  const currentResp = hasData && liveVitals ? `${liveVitals.resp}/min` : "--";
+
+  const hrDetail = hasData && liveVitals ? (liveVitals.hr > 100 ? "Tachycardia alert" : "Normal sinus rhythm") : "Connect monitor to stream";
+  const spo2Detail = hasData && liveVitals ? (liveVitals.spo2 < 95 ? "Hypoxia risk alert" : "Oxygen saturation stable") : "Connect monitor to stream";
+  const tempDetail = hasData && liveVitals ? "Within normal range" : "Connect monitor to stream";
+  const respDetail = hasData && liveVitals ? "Steady breathing rate" : "Connect monitor to stream";
+
+  const vitals = [
+    { label: "Heart Rate", value: currentHR, detail: hrDetail, icon: Heart, accent: hasData ? "text-rose-500" : "text-slate-400" },
+    { label: "SpO₂", value: currentSpO2, detail: spo2Detail, icon: Activity, accent: hasData ? "text-teal-600" : "text-slate-400" },
+    { label: "Temperature", value: currentTemp, detail: tempDetail, icon: Thermometer, accent: hasData ? "text-amber-500" : "text-slate-400" },
+    { label: "Respiration", value: currentResp, detail: respDetail, icon: Wind, accent: hasData ? "text-cyan-600" : "text-slate-400" },
+  ];
+
   return (
     <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] lg:p-8">
       <div className="flex items-center justify-between">
@@ -15,7 +33,15 @@ export default function LiveVitals() {
           <p className="text-sm uppercase tracking-[0.35em] text-slate-500">Telemetry</p>
           <h2 className="mt-2 text-2xl font-bold text-slate-900">Live Vitals</h2>
         </div>
-        <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">Live feed</span>
+        {status === "live" && (
+          <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">Live feed</span>
+        )}
+        {status === "historical" && (
+          <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">Historical Log</span>
+        )}
+        {status === "offline" && (
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-500">Disconnected</span>
+        )}
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">

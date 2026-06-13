@@ -173,6 +173,19 @@ export class FallbackDbService implements OnModuleInit {
     return false;
   }
 
+  updatePatientVitals(id: string, vitals: any) {
+    const patient = this.data.patients.find((p) => p.id === id);
+    if (patient) {
+      if (vitals.hr !== undefined) patient.hr = Number(vitals.hr);
+      if (vitals.spo2 !== undefined) patient.spo2 = Number(vitals.spo2);
+      if (vitals.status !== undefined) patient.status = vitals.status;
+      if (vitals.recovery !== undefined) patient.recovery = Number(vitals.recovery);
+      this.save();
+      return true;
+    }
+    return false;
+  }
+
   addPatient(patient: any) {
     const newId = patient.id || `P-${1000 + this.data.patients.length + 1}`;
     const newPatient = {

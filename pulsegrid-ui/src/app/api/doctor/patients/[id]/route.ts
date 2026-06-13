@@ -58,6 +58,10 @@ export async function PATCH(
   if (patient) {
     if (body.labTests !== undefined) (patient as any).labTests = body.labTests;
     if (body.labTest !== undefined) (patient as any).labTest = body.labTest;
+    if (body.hr !== undefined) (patient as any).hr = Number(body.hr);
+    if (body.spo2 !== undefined) (patient as any).spo2 = Number(body.spo2);
+    if (body.status !== undefined) (patient as any).status = body.status;
+    if (body.recovery !== undefined) (patient as any).recovery = Number(body.recovery);
   }
   return NextResponse.json({ id, ...body });
 }
