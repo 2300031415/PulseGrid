@@ -16,7 +16,7 @@ jobs:
           cache: npm
           cache-dependency-path: pulsegrid-ui/package-lock.json
       - name: Install frontend dependencies
-        run: cd pulsegrid-ui && npm ci
+        run: cd pulsegrid-ui && npm install
       - name: Build frontend
         run: cd pulsegrid-ui && npm run build
       - name: Lint frontend
