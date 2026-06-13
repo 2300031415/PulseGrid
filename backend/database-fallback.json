@@ -20,15 +20,8 @@
       "hospitalCode": "CITYHOSP01",
       "labTests": [
         {
-          "id": "LT-1043-1",
-          "name": "CBC",
-          "status": "Pending",
-          "pdfFilename": null,
-          "pdfData": null
-        },
-        {
-          "id": "LT-1043-2",
-          "name": "Lipid Panel",
+          "id": "LT-P-1043-1781376136797",
+          "name": "CT Scan",
           "status": "Pending",
           "pdfFilename": null,
           "pdfData": null
@@ -38,7 +31,7 @@
       "name": "Arjun Sharma",
       "ward": "ICU-A",
       "age": 64,
-      "hr": 75,
+      "hr": 73,
       "spo2": 99,
       "status": "Stable",
       "recovery": 92,
@@ -46,26 +39,11 @@
       "doctor": "Dr. Sarah Johnson",
       "room": "A-12",
       "risk": "Low",
-      "labTest": "CBC, Lipid Panel"
+      "labTest": "CT Scan"
     },
     {
       "hospitalCode": "CITYHOSP01",
-      "labTests": [
-        {
-          "id": "LT-1044-1",
-          "name": "CRP",
-          "status": "Pending",
-          "pdfFilename": null,
-          "pdfData": null
-        },
-        {
-          "id": "LT-1044-2",
-          "name": "ECG Study",
-          "status": "Pending",
-          "pdfFilename": null,
-          "pdfData": null
-        }
-      ],
+      "labTests": [],
       "id": "P-1044",
       "name": "Meera Iyer",
       "ward": "ICU-A",
@@ -78,19 +56,11 @@
       "doctor": "Dr. Sarah Johnson",
       "room": "A-14",
       "risk": "High",
-      "labTest": "CRP, ECG Study"
+      "labTest": "None"
     },
     {
       "hospitalCode": "CITYHOSP01",
-      "labTests": [
-        {
-          "id": "LT-1045-1",
-          "name": "Urinalysis",
-          "status": "Pending",
-          "pdfFilename": null,
-          "pdfData": null
-        }
-      ],
+      "labTests": [],
       "id": "P-1045",
       "name": "Vikram Reddy",
       "ward": "ICU-B",
@@ -103,7 +73,7 @@
       "doctor": "Dr. Sarah Johnson",
       "room": "B-03",
       "risk": "Medium",
-      "labTest": "Urinalysis"
+      "labTest": "None"
     }
   ],
   "alerts": [

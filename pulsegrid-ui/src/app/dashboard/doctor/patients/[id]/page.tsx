@@ -124,6 +124,101 @@ export default function PatientProfilePage() {
     setLivePoints([]);
   };
 
+  // Web Bluetooth GATT Connection for Shanghai Berry PM6100 Monitor
+  const connectBluetoothDevice = async () => {
+    const nav = typeof window !== "undefined" ? (navigator as any) : null;
+    if (!nav || !nav.bluetooth) {
+      alert("Web Bluetooth API is not supported in this browser. Please use Chrome, Edge, or Opera.");
+      return;
+    }
+
+    try {
+      setScanning(true);
+      const device = await nav.bluetooth.requestDevice({
+        filters: [
+          { namePrefix: "Berry" },
+          { namePrefix: "PM" }
+        ],
+        optionalServices: [
+          "0000ffb0-0000-1000-8000-00805f9b34fb", // Custom service UUID of Berry oximeters
+          "49535343-fe7d-4ae5-8fa9-9fafd205e455"  // Microchip transparent service
+        ]
+      });
+
+      setConnectedDevice(device.name || "Physical Berry PM6100");
+      setScanning(false);
+
+      const server = await device.gatt?.connect();
+      if (!server) throw new Error("GATT server connection failed");
+
+      let service;
+      try {
+        service = await server.getPrimaryService("0000ffb0-0000-1000-8000-00805f9b34fb");
+      } catch {
+        service = await server.getPrimaryService("49535343-fe7d-4ae5-8fa9-9fafd205e455");
+      }
+
+      const characteristics = await service.getCharacteristics();
+      const rxChar = characteristics.find((c: any) => c.properties.notify || c.properties.indicate);
+      if (!rxChar) throw new Error("No receiver notification characteristic found");
+
+      await rxChar.startNotifications();
+
+      const byteBuffer: number[] = [];
+      rxChar.addEventListener("characteristicvaluechanged", (event: any) => {
+        const value: DataView = event.target.value;
+        for (let i = 0; i < value.byteLength; i++) {
+          byteBuffer.push(value.getUint8(i));
+        }
+
+        while (byteBuffer.length >= 5) {
+          const syncIndex = byteBuffer.findIndex(b => (b & 0x80) !== 0);
+          if (syncIndex === -1) {
+            byteBuffer.length = 0;
+            break;
+          }
+          if (syncIndex > 0) {
+            byteBuffer.splice(0, syncIndex);
+          }
+          if (byteBuffer.length < 5) {
+            break;
+          }
+
+          const isValid = byteBuffer.slice(1, 5).every(b => (b & 0x80) === 0);
+          if (isValid) {
+            const rawPacket = byteBuffer.splice(0, 5);
+            const hr = rawPacket[2];
+            const spo2 = rawPacket[3];
+            const resp = rawPacket[4];
+
+            if (hr > 30 && hr < 240 && spo2 > 50 && spo2 <= 100) {
+              const parsed = {
+                hr,
+                spo2,
+                temp: 36.8,
+                resp: resp > 0 && resp < 50 ? resp : 18
+              };
+              liveVitalsRef.current = parsed;
+              setLiveVitals(parsed);
+            }
+          } else {
+            byteBuffer.shift();
+          }
+        }
+      });
+
+      device.addEventListener("gattserverdisconnected", () => {
+        disconnectDevice();
+      });
+
+    } catch (err: any) {
+      console.error("Web Bluetooth error:", err);
+      setScanning(false);
+      setConnectedDevice(null);
+      alert(`Web Bluetooth Connection failed: ${err.message || err}`);
+    }
+  };
+
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
     // If date is changed, disconnect active monitor
@@ -429,7 +524,19 @@ export default function PatientProfilePage() {
         {/* Available Devices List (Only shown when not scanning, devices available, scanning panel clicked) */}
         {showDeviceList && !connectedDevice && availableDevices.length > 0 && !scanning && (
           <div className="mt-4 border border-slate-100 rounded-2xl bg-slate-50 p-5 space-y-3 animate-scale-in">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Select Available Bluetooth/COM Monitor</h3>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Select Available Bluetooth/COM Monitor</h3>
+              <button
+                type="button"
+                onClick={connectBluetoothDevice}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition shadow-sm shadow-teal-600/10"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                  <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                </svg>
+                Pair Physical Device (Bluetooth BLE)
+              </button>
+            </div>
             <div className="grid gap-2 sm:grid-cols-2">
               {availableDevices.map((device) => (
                 <button
@@ -438,7 +545,7 @@ export default function PatientProfilePage() {
                   onClick={() => connectDevice(device)}
                   className="flex items-center justify-between px-4 py-3 bg-white hover:bg-teal-50 border border-slate-200 hover:border-teal-200 rounded-xl text-xs font-semibold text-slate-700 transition text-left"
                 >
-                  <span>{device}</span>
+                  <span>{device} (Simulated)</span>
                   <span className="text-[10px] text-teal-600 font-bold">Connect</span>
                 </button>
               ))}
