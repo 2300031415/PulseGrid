@@ -1,0 +1,112 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pulsegrid-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-pulsegrid}
+      POSTGRES_USER: ${POSTGRES_USER:-pulsegrid}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pulsegrid}
+    volumes:
+      - ./database/postgres:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U pulsegrid -d pulsegrid']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: pulsegrid-redis
+    command: ['redis-server', '/usr/local/etc/redis/redis.conf']
+    volumes:
+      - ./cache/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    ports:
+      - '6379:6379'
+
+  minio:
+    image: minio/minio:latest
+    container_name: pulsegrid-minio
+    command: server /data --console-address ':9001'
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-pulsegrid}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-pulsegrid-secret}
+    volumes:
+      - ./storage/minio:/data
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+
+  backend:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile.backend
+    container_name: pulsegrid-backend
+    env_file:
+      - ../env.example
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    ports:
+      - '4000:4000'
+
+  frontend:
+    build:
+      context: ../../pulsegrid-ui
+      dockerfile: ../deployment/docker/Dockerfile.frontend
+    container_name: pulsegrid-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:4000}
+      NEXT_PUBLIC_SOCKET_URL: ${NEXT_PUBLIC_SOCKET_URL:-http://localhost:4000}
+      NEXT_PUBLIC_STORAGE_URL: ${NEXT_PUBLIC_STORAGE_URL:-http://localhost:9000}
+    depends_on:
+      - backend
+    ports:
+      - '3000:3000'
+
+  ai-service:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile.ai
+    container_name: pulsegrid-ai
+    ports:
+      - '8000:8000'
+
+  udp-gateway:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile.udp
+    container_name: pulsegrid-udp
+    depends_on:
+      - redis
+    ports:
+      - '5000:5000/udp'
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: pulsegrid-prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - '9090:9090'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: pulsegrid-grafana
+    depends_on:
+      - prometheus
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports:
+      - '3001:3000'
+
+volumes:
+  postgres_data:

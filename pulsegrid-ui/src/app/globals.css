@@ -1,0 +1,131 @@
+@import "tailwindcss";
+html {
+  scroll-behavior: smooth;
+}
+:root {
+  /* Backgrounds */
+  --background: #f8fbfc;
+  --foreground: #0f172a;
+
+  /* PulseGrid Brand */
+  --primary: #0ea5a4;
+  --primary-dark: #0f766e;
+  --secondary: #2563eb;
+
+  /* Healthcare Palette */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Neutral */
+  --card: #ffffff;
+  --border: #e2e8f0;
+
+  /* Gradients */
+  --hero-start: #0ea5a4;
+  --hero-end: #2563eb;
+
+  /* Shadows */
+  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-card: 0 15px 40px rgba(15, 23, 42, 0.06);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+/* Utility Classes */
+
+.container-custom {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--hero-start),
+    var(--hero-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--hero-start),
+    var(--hero-end)
+  );
+}
+
+.card-shadow {
+  box-shadow: var(--shadow-card);
+}
+
+.soft-shadow {
+  box-shadow: var(--shadow-soft);
+}
+
+.glass-card {
+  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+@keyframes float {
+  0%,100%{
+    transform:translateY(0px);
+  }
+
+  50%{
+    transform:translateY(-12px);
+  }
+}
+
+@keyframes phoneFloat {
+  0%,100%{
+    transform:translateY(0px) rotate(4deg);
+  }
+
+  50%{
+    transform:translateY(-18px) rotate(4deg);
+  }
+}
+
+html{
+  scroll-behavior:smooth;
+}
+.ecg-flow {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: ecgMove 4s linear infinite;
+}
+
+@keyframes ecgMove {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

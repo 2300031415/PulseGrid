@@ -1,0 +1,197 @@
+{
+  "hospitals": [
+    {
+      "id": "H-1001",
+      "name": "CityCare General",
+      "region": "North Wing",
+      "beds": 220,
+      "status": "Active"
+    },
+    {
+      "id": "H-1002",
+      "name": "PulseGrid Referral",
+      "region": "Central",
+      "beds": 180,
+      "status": "Active"
+    }
+  ],
+  "patients": [
+    {
+      "id": "P-1043",
+      "name": "Arjun Sharma",
+      "ward": "ICU-A",
+      "age": 64,
+      "hr": 74,
+      "spo2": 98,
+      "status": "Stable",
+      "recovery": 92,
+      "condition": "Post-op cardiac monitoring",
+      "doctor": "Dr. Sarah Johnson",
+      "room": "A-12",
+      "risk": "Low",
+      "hospitalCode": "CITYHOSP01",
+      "labTest": "CBC, Lipid Panel",
+      "labTests": [
+        {
+          "id": "LT-1043-1",
+          "name": "CBC",
+          "status": "Pending",
+          "pdfFilename": null,
+          "pdfData": null
+        },
+        {
+          "id": "LT-1043-2",
+          "name": "Lipid Panel",
+          "status": "Pending",
+          "pdfFilename": null,
+          "pdfData": null
+        }
+      ]
+    },
+    {
+      "id": "P-1044",
+      "name": "Meera Iyer",
+      "ward": "ICU-A",
+      "age": 71,
+      "hr": 100,
+      "spo2": 97,
+      "status": "Critical",
+      "recovery": 45,
+      "condition": "Respiratory distress review",
+      "doctor": "Dr. Sarah Johnson",
+      "room": "A-14",
+      "risk": "High",
+      "hospitalCode": "CITYHOSP01",
+      "labTest": "CRP, ECG Study",
+      "labTests": [
+        {
+          "id": "LT-1044-1",
+          "name": "CRP",
+          "status": "Pending",
+          "pdfFilename": null,
+          "pdfData": null
+        },
+        {
+          "id": "LT-1044-2",
+          "name": "ECG Study",
+          "status": "Pending",
+          "pdfFilename": null,
+          "pdfData": null
+        }
+      ]
+    },
+    {
+      "id": "P-1045",
+      "name": "Vikram Reddy",
+      "ward": "ICU-B",
+      "age": 58,
+      "hr": 88,
+      "spo2": 95,
+      "status": "Warning",
+      "recovery": 64,
+      "condition": "Post-surgery observation",
+      "doctor": "Dr. Sarah Johnson",
+      "room": "B-03",
+      "risk": "Medium",
+      "hospitalCode": "CITYHOSP01",
+      "labTest": "Urinalysis",
+      "labTests": [
+        {
+          "id": "LT-1045-1",
+          "name": "Urinalysis",
+          "status": "Pending",
+          "pdfFilename": null,
+          "pdfData": null
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "id": 1,
+      "title": "Low SpO₂",
+      "patient": "Meera Iyer",
+      "severity": "Critical",
+      "time": "11:42 AM"
+    },
+    {
+      "id": 2,
+      "title": "High Heart Rate",
+      "patient": "Arjun Sharma",
+      "severity": "Warning",
+      "time": "09:12 AM"
+    },
+    {
+      "id": 3,
+      "title": "Medication Due",
+      "patient": "Vikram Reddy",
+      "severity": "Info",
+      "time": "08:02 AM"
+    }
+  ],
+  "doctorProfile": {
+    "name": "Dr. Sarah Johnson",
+    "specialty": "Cardiologist",
+    "hospital": "City General Hospital",
+    "email": "sarah.johnson@pulsegrid.health",
+    "phone": "+1 415 555 0188",
+    "ward": "Cardiac ICU",
+    "notificationEmail": true,
+    "smsAlerts": true,
+    "monitoringMode": "Live telemetry"
+  },
+  "doctorSettings": {
+    "liveTelemetry": true,
+    "aiAlerts": true,
+    "autoRefresh": true,
+    "notifications": true,
+    "darkMode": false
+  },
+  "users": [
+    {
+      "id": "U-1001",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Doctor",
+      "name": "Dr. Sarah Johnson",
+      "email": "doctor@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Cardiologist"
+    },
+    {
+      "id": "U-1002",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Nurse",
+      "name": "Nancy Wheeler",
+      "email": "nurse@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Emergency Department"
+    },
+    {
+      "id": "U-1003",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Patient",
+      "name": "Arjun Sharma",
+      "email": "patient@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": null
+    },
+    {
+      "id": "U-1004",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Lab Tech",
+      "name": "Ravi Thomas",
+      "email": "lab@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Pathology Lab"
+    },
+    {
+      "id": "U-1005",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Hospital Admin",
+      "name": "Jordan Lee",
+      "email": "hospital.admin@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Platform Operations"
+    }
+  ]
+}
