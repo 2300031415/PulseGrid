@@ -31,8 +31,8 @@
       "name": "Arjun Sharma",
       "ward": "ICU-A",
       "age": 64,
-      "hr": 73,
-      "spo2": 99,
+      "hr": 0,
+      "spo2": 0,
       "status": "Stable",
       "recovery": 92,
       "condition": "Post-op cardiac monitoring",
@@ -74,6 +74,23 @@
       "room": "B-03",
       "risk": "Medium",
       "labTest": "None"
+    },
+    {
+      "id": "P-1004",
+      "ward": "General",
+      "hr": 80,
+      "spo2": 98,
+      "status": "Stable",
+      "recovery": 85,
+      "condition": "Observation",
+      "doctor": "Dr. Sarah Johnson",
+      "room": "TBD",
+      "risk": "Low",
+      "labTest": "None",
+      "labTests": [],
+      "name": "Meera Iyer",
+      "age": 40,
+      "hospitalCode": "CITYHOSP01"
     }
   ],
   "alerts": [
@@ -162,6 +179,35 @@
       "email": "hospital.admin@pulsegrid.health",
       "password": "PulseGrid@2026",
       "specialtyOrDepartment": "Platform Operations"
+    },
+    {
+      "id": "U-1006",
+      "role": "Doctor",
+      "name": "Ajith pandey",
+      "email": "ajithpandey01@pulsegrid.com",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Cardiologist",
+      "hospitalCode": "CITYHOSP01"
+    },
+    {
+      "id": "U-1007",
+      "role": "Nurse",
+      "name": "Ajith pandey",
+      "email": "ajithpandey01@pulsegrid.com",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Emergency Department",
+      "hospitalCode": "CITYHOSP01"
+    },
+    {
+      "id": "U-1008",
+      "role": "Patient",
+      "name": "Meera Iyer",
+      "email": "meera@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "age": 40,
+      "ward": "General",
+      "doctor": "Dr. Sarah Johnson",
+      "hospitalCode": "CITYHOSP01"
     }
   ]
 }
