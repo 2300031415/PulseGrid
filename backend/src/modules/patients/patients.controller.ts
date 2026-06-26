@@ -36,8 +36,8 @@ export class PatientsController {
       name: row.name,
       ward: row.ward || 'General',
       age: row.age ?? 58,
-      hr: row.hr ?? 82,
-      spo2: row.spo2 ?? 97,
+      hr: row.hr !== null && row.hr !== undefined ? Number(row.hr) : null,
+      spo2: row.spo2 !== null && row.spo2 !== undefined ? Number(row.spo2) : null,
       status: row.status === 'ACTIVE' ? 'Stable' : (row.status || 'Stable'),
       recovery: row.recovery ?? 78,
       condition: row.diagnosis || row.condition || 'Monitoring in progress',
@@ -175,10 +175,12 @@ export class PatientsController {
         );
       }
       if (body.hr !== undefined) {
-        await this.databaseService.query('UPDATE patients SET hr = $1 WHERE id = $2', [Number(body.hr), id]);
+        const hrVal = body.hr === null ? null : Number(body.hr);
+        await this.databaseService.query('UPDATE patients SET hr = $1 WHERE id = $2', [hrVal, id]);
       }
       if (body.spo2 !== undefined) {
-        await this.databaseService.query('UPDATE patients SET spo2 = $1 WHERE id = $2', [Number(body.spo2), id]);
+        const spo2Val = body.spo2 === null ? null : Number(body.spo2);
+        await this.databaseService.query('UPDATE patients SET spo2 = $1 WHERE id = $2', [spo2Val, id]);
       }
       if (body.status !== undefined) {
         await this.databaseService.query('UPDATE patients SET status = $1 WHERE id = $2', [body.status, id]);
