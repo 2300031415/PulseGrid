@@ -211,9 +211,7 @@ export default function LoginPage() {
 
               <button
                 type="button"
-                onClick={() => {
-                  const expected = roleCredentials[selectedRole];
-
+                onClick={async () => {
                   const normalizedCode = hospitalCode.trim().toUpperCase();
                   const knownHospital = hospitalOptions.some((item) => item.code === normalizedCode);
 
@@ -227,31 +225,51 @@ export default function LoginPage() {
                     return;
                   }
 
-                  if (email.trim().toLowerCase() === expected.email && password === expected.password) {
+                  try {
+                    const res = await fetch("/api/auth/login", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        email: email.trim().toLowerCase(),
+                        password: password,
+                      }),
+                    });
+
+                    if (!res.ok) {
+                      const errData = await res.json().catch(() => ({}));
+                      setError(errData.error || "Invalid credentials.");
+                      return;
+                    }
+
+                    const data = await res.json();
+                    const user = data.user;
+
+                    if (!user) {
+                      setError("No user data returned from authentication.");
+                      return;
+                    }
+
+                    const userRole = user.role;
+                    if (userRole !== selectedRole) {
+                      setError(`Authorized role is ${userRole}, but you selected ${selectedRole}.`);
+                      return;
+                    }
+
                     setError("");
-                    const names: Record<string, string> = {
-                      Doctor: "Dr. Sarah Johnson",
-                      Nurse: "Nancy Wheeler",
-                      Patient: "Arjun Sharma",
-                      "Lab Tech": "Ravi Thomas",
-                      "Hospital Admin": "Jordan Lee",
-                    };
-                    const displayName = names[selectedRole] || "User";
                     localStorage.setItem(
                       "pulsegrid_user",
                       JSON.stringify({
-                        role: selectedRole,
-                        name: displayName,
-                        email: email.trim().toLowerCase(),
+                        role: userRole,
+                        name: user.name,
+                        email: user.email,
                         hospitalCode: normalizedCode,
                         hospitalName,
                       })
                     );
                     router.push(roleRoutes[selectedRole] ?? "/dashboard/doctor");
-                    return;
+                  } catch (err) {
+                    setError("Unable to connect to authentication server.");
                   }
-
-                  setError("Invalid credentials. Use the role demo credentials shown above.");
                 }}
                 className="w-full mt-8 py-4 rounded-xl bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition"
               >
