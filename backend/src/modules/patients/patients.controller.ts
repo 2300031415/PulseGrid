@@ -31,6 +31,13 @@ export class PatientsController {
       }];
     }
 
+    let parsedMedications = null;
+    try {
+      if (row.medications) {
+        parsedMedications = typeof row.medications === 'string' ? JSON.parse(row.medications) : row.medications;
+      }
+    } catch {}
+
     return {
       id: row.id,
       name: row.name,
@@ -48,6 +55,15 @@ export class PatientsController {
       labTests,
       hospitalCode: row.hospital_code || row.hospitalCode || 'CITYHOSP01',
       labReportPdf: row.lab_report_pdf || row.labReportPdf || null,
+      
+      // Clinical fields
+      diagnosisDetails: row.diagnosisDetails || row.diagnosis_details || null,
+      admissionReason: row.admissionReason || row.admission_reason || null,
+      admissionReasonDetails: row.admissionReasonDetails || row.admission_reason_details || null,
+      currentTreatment: row.currentTreatment || row.current_treatment || null,
+      currentTreatmentDetails: row.currentTreatmentDetails || row.current_treatment_details || null,
+      riskDetails: row.riskDetails || row.risk_details || null,
+      medications: parsedMedications,
     };
   }
 
@@ -189,6 +205,35 @@ export class PatientsController {
         await this.databaseService.query('UPDATE patients SET recovery = $1 WHERE id = $2', [Number(body.recovery), id]);
       }
 
+      // Clinical fields SQL updates
+      if (body.condition !== undefined) {
+        await this.databaseService.query('UPDATE patients SET condition = $1 WHERE id = $2', [body.condition, id]);
+      }
+      if (body.diagnosisDetails !== undefined) {
+        await this.databaseService.query('UPDATE patients SET diagnosis_details = $1 WHERE id = $2', [body.diagnosisDetails, id]);
+      }
+      if (body.admissionReason !== undefined) {
+        await this.databaseService.query('UPDATE patients SET admission_reason = $1 WHERE id = $2', [body.admissionReason, id]);
+      }
+      if (body.admissionReasonDetails !== undefined) {
+        await this.databaseService.query('UPDATE patients SET admission_reason_details = $1 WHERE id = $2', [body.admissionReasonDetails, id]);
+      }
+      if (body.currentTreatment !== undefined) {
+        await this.databaseService.query('UPDATE patients SET current_treatment = $1 WHERE id = $2', [body.currentTreatment, id]);
+      }
+      if (body.currentTreatmentDetails !== undefined) {
+        await this.databaseService.query('UPDATE patients SET current_treatment_details = $1 WHERE id = $2', [body.currentTreatmentDetails, id]);
+      }
+      if (body.risk !== undefined) {
+        await this.databaseService.query('UPDATE patients SET risk = $1 WHERE id = $2', [body.risk, id]);
+      }
+      if (body.riskDetails !== undefined) {
+        await this.databaseService.query('UPDATE patients SET risk_details = $1 WHERE id = $2', [body.riskDetails, id]);
+      }
+      if (body.medications !== undefined) {
+        await this.databaseService.query('UPDATE patients SET medications = $1 WHERE id = $2', [JSON.stringify(body.medications), id]);
+      }
+
       this.fallbackDbService.updatePatientVitals(id, body);
       if (body.labTests !== undefined) {
         this.fallbackDbService.updatePatientLabTests(id, body.labTests || []);
@@ -201,7 +246,21 @@ export class PatientsController {
       if (body.labTest !== undefined) {
         this.fallbackDbService.updatePatientLabTest(id, body.labTest);
       }
-      if (body.hr !== undefined || body.spo2 !== undefined || body.status !== undefined || body.recovery !== undefined) {
+      if (
+        body.hr !== undefined || 
+        body.spo2 !== undefined || 
+        body.status !== undefined || 
+        body.recovery !== undefined ||
+        body.condition !== undefined ||
+        body.diagnosisDetails !== undefined ||
+        body.admissionReason !== undefined ||
+        body.admissionReasonDetails !== undefined ||
+        body.currentTreatment !== undefined ||
+        body.currentTreatmentDetails !== undefined ||
+        body.risk !== undefined ||
+        body.riskDetails !== undefined ||
+        body.medications !== undefined
+      ) {
         this.fallbackDbService.updatePatientVitals(id, body);
       }
       return { id, ...body };

@@ -35,11 +35,35 @@
       "spo2": null,
       "status": "Stable",
       "recovery": 92,
-      "condition": "Post-op cardiac monitoring",
+      "condition": "Post-op cardiac monitoring (Updated)",
       "doctor": "Dr. Sarah Johnson",
       "room": "A-12",
-      "risk": "Low",
-      "labTest": "CT Scan"
+      "risk": "Medium",
+      "labTest": "CT Scan",
+      "diagnosisDetails": "Arjun is recovery-focused and showing steady progress.",
+      "riskDetails": "Discharge readiness improving. Patient is stable under regular observation.",
+      "medications": [
+        {
+          "name": "Paracetamol",
+          "time": "08:00 AM",
+          "note": "Pain relief - every 6 hours"
+        },
+        {
+          "name": "Antibiotic",
+          "time": "01:00 PM",
+          "note": "Post-op care"
+        },
+        {
+          "name": "Vitamin D",
+          "time": "08:00 PM",
+          "note": "Daily supplement"
+        },
+        {
+          "name": "Ibuprofen",
+          "time": "10:00 PM",
+          "note": "For swelling"
+        }
+      ]
     },
     {
       "hospitalCode": "CITYHOSP01",

@@ -11,6 +11,15 @@ export type PatientRecord = {
   doctor: string;
   room: string;
   risk: string;
+  
+  // Custom clinical fields
+  diagnosisDetails?: string | null;
+  admissionReason?: string | null;
+  admissionReasonDetails?: string | null;
+  currentTreatment?: string | null;
+  currentTreatmentDetails?: string | null;
+  riskDetails?: string | null;
+  medications?: { name: string; time: string; note: string }[] | null;
 };
 
 export const patients: PatientRecord[] = [

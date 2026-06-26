@@ -62,6 +62,17 @@ export async function PATCH(
     if (body.spo2 !== undefined) (patient as any).spo2 = Number(body.spo2);
     if (body.status !== undefined) (patient as any).status = body.status;
     if (body.recovery !== undefined) (patient as any).recovery = Number(body.recovery);
+    
+    // Clinical fields
+    if (body.condition !== undefined) (patient as any).condition = body.condition;
+    if (body.diagnosisDetails !== undefined) (patient as any).diagnosisDetails = body.diagnosisDetails;
+    if (body.admissionReason !== undefined) (patient as any).admissionReason = body.admissionReason;
+    if (body.admissionReasonDetails !== undefined) (patient as any).admissionReasonDetails = body.admissionReasonDetails;
+    if (body.currentTreatment !== undefined) (patient as any).currentTreatment = body.currentTreatment;
+    if (body.currentTreatmentDetails !== undefined) (patient as any).currentTreatmentDetails = body.currentTreatmentDetails;
+    if (body.risk !== undefined) (patient as any).risk = body.risk;
+    if (body.riskDetails !== undefined) (patient as any).riskDetails = body.riskDetails;
+    if (body.medications !== undefined) (patient as any).medications = body.medications;
   }
   return NextResponse.json({ id, ...body });
 }

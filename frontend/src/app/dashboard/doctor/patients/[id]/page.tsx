@@ -95,7 +95,7 @@ export default function PatientProfilePage() {
   const [selectedDate, setSelectedDate] = useState(todayStr);
   const isHistorical = selectedDate !== todayStr;
 
-  useEffect(() => {
+  const fetchPatient = () => {
     if (!params?.id) return;
 
     fetch(`/api/doctor/patients/${params.id}`)
@@ -112,6 +112,10 @@ export default function PatientProfilePage() {
         }
       })
       .catch(() => undefined);
+  };
+
+  useEffect(() => {
+    fetchPatient();
   }, [params?.id]);
 
   // Handle device scan simulation
@@ -600,12 +604,12 @@ export default function PatientProfilePage() {
       <LiveVitals liveVitals={displayVitals} status={currentStatus} />
 
       <TrendCard />
-      <DiagnosisCard patient={patient} />
+      <DiagnosisCard patient={patient} onUpdate={fetchPatient} isEditable={!isHistorical} />
 
       <AIInsights />
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <MedicationSchedule />
+        <MedicationSchedule patient={patient} onUpdate={fetchPatient} isEditable={!isHistorical} />
         <LabResults />
       </div>
 

@@ -605,7 +605,7 @@ export default function NursePatientProfilePage() {
       <AIInsights />
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <MedicationSchedule />
+        <MedicationSchedule patient={patient} />
         <LabResults />
       </div>
 
