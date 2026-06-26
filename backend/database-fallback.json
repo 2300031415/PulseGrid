@@ -29,8 +29,8 @@
       ],
       "id": "P-1043",
       "name": "Arjun Sharma",
-      "ward": "ICU-A",
-      "age": 64,
+      "ward": "General",
+      "age": 45,
       "hr": null,
       "spo2": null,
       "status": "Stable",
@@ -63,15 +63,16 @@
           "time": "10:00 PM",
           "note": "For swelling"
         }
-      ]
+      ],
+      "productId": "ID-001"
     },
     {
       "hospitalCode": "CITYHOSP01",
       "labTests": [],
       "id": "P-1044",
       "name": "Meera Iyer",
-      "ward": "ICU-A",
-      "age": 71,
+      "ward": "General",
+      "age": 40,
       "hr": null,
       "spo2": null,
       "status": "Critical",
@@ -80,7 +81,8 @@
       "doctor": "Dr. Sarah Johnson",
       "room": "A-14",
       "risk": "High",
-      "labTest": "None"
+      "labTest": "None",
+      "productId": "ID-002"
     },
     {
       "hospitalCode": "CITYHOSP01",
@@ -115,24 +117,6 @@
       "labTest": "None",
       "name": "Meera Iyer",
       "age": 40
-    },
-    {
-      "id": "P-1005",
-      "ward": "Cardiac ICU",
-      "hr": 80,
-      "spo2": 98,
-      "status": "Stable",
-      "recovery": 85,
-      "condition": "Observation",
-      "doctor": "Dr. Sarah Johnson",
-      "room": "TBD",
-      "risk": "Low",
-      "labTest": "None",
-      "labTests": [],
-      "name": "Verification Patient",
-      "age": 30,
-      "hospitalCode": "CITYHOSP01",
-      "productId": "PG-DEV-999"
     }
   ],
   "alerts": [
@@ -248,18 +232,6 @@
       "password": "PulseGrid@2026",
       "age": 40,
       "ward": "General",
-      "doctor": "Dr. Sarah Johnson",
-      "hospitalCode": "CITYHOSP01"
-    },
-    {
-      "id": "U-1009",
-      "role": "Patient",
-      "name": "Verification Patient",
-      "email": "verification.patient@pulsegrid.health",
-      "productId": "PG-DEV-999",
-      "password": "PulseGrid@2026",
-      "age": 30,
-      "ward": "Cardiac ICU",
       "doctor": "Dr. Sarah Johnson",
       "hospitalCode": "CITYHOSP01"
     }

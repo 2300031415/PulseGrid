@@ -287,4 +287,42 @@ export class FallbackDbService implements OnModuleInit {
     this.save();
     return newUser;
   }
+
+  deleteUser(id: string) {
+    const user = this.data.users.find((u) => u.id === id);
+    if (!user) return false;
+
+    this.data.users = this.data.users.filter((u) => u.id !== id);
+
+    if (user.role === 'Patient') {
+      this.data.patients = this.data.patients.filter((p) => p.name !== user.name);
+    }
+    this.save();
+    return true;
+  }
+
+  updateUser(id: string, updates: any) {
+    const user = this.data.users.find((u) => u.id === id);
+    if (!user) return null;
+
+    const oldName = user.name;
+
+    if (updates.name !== undefined) user.name = updates.name;
+    if (updates.email !== undefined) user.email = updates.email;
+    if (updates.password !== undefined) user.password = updates.password;
+    if (updates.specialtyOrDepartment !== undefined) user.specialtyOrDepartment = updates.specialtyOrDepartment;
+
+    if (user.role === 'Patient') {
+      const patient = this.data.patients.find((p) => p.name === oldName);
+      if (patient) {
+        if (updates.name !== undefined) patient.name = updates.name;
+        if (updates.age !== undefined) patient.age = Number(updates.age);
+        if (updates.ward !== undefined) patient.ward = updates.ward;
+        if (updates.doctor !== undefined) patient.doctor = updates.doctor;
+        if (updates.productId !== undefined) patient.productId = updates.productId;
+      }
+    }
+    this.save();
+    return user;
+  }
 }

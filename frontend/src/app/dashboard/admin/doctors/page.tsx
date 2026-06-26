@@ -16,6 +16,7 @@ export default function AdminDoctorsPage() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingDoctorId, setEditingDoctorId] = useState<string | null>(null);
 
   // Form State
   const [name, setName] = useState("");
@@ -43,29 +44,60 @@ export default function AdminDoctorsPage() {
     fetchDoctors();
   }, []);
 
+  const handleCloseModal = () => {
+    setName("");
+    setEmail("");
+    setSpecialty("Cardiologist");
+    setEditingDoctorId(null);
+    setShowAddModal(false);
+  };
+
+  const handleStartEdit = (doc: Doctor) => {
+    setName(doc.name);
+    setEmail(doc.email);
+    setSpecialty(doc.specialtyOrDepartment || "Cardiologist");
+    setEditingDoctorId(doc.id);
+    setShowAddModal(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this doctor?")) return;
+    try {
+      const res = await fetch(`/api/admin/staff?id=${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        fetchDoctors();
+      }
+    } catch {}
+  };
+
   const handleAddDoctor = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email) return;
 
     try {
-      const res = await fetch("/api/admin/staff", {
-        method: "POST",
+      const isEdit = !!editingDoctorId;
+      const url = "/api/admin/staff";
+      const method = isEdit ? "PATCH" : "POST";
+      const payload = {
+        id: editingDoctorId || undefined,
+        role: "Doctor",
+        name,
+        email,
+        password,
+        specialtyOrDepartment: specialty,
+        hospitalCode: adminCode,
+      };
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          role: "Doctor",
-          name,
-          email,
-          password,
-          specialtyOrDepartment: specialty,
-          hospitalCode: adminCode,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
-        setName("");
-        setEmail("");
-        setSpecialty("Cardiologist");
-        setShowAddModal(false);
+        handleCloseModal();
         fetchDoctors();
       }
     } catch {}
@@ -134,6 +166,23 @@ export default function AdminDoctorsPage() {
                   <span>ID: {doc.id}</span>
                 </div>
               </div>
+
+              <div className="flex gap-2 border-t border-slate-100 pt-4 justify-end text-xs font-bold mt-2">
+                <button
+                  type="button"
+                  onClick={() => handleStartEdit(doc)}
+                  className="px-3.5 py-1.5 rounded-xl border border-teal-200 text-teal-600 hover:bg-teal-50 transition"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(doc.id)}
+                  className="px-3.5 py-1.5 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 transition"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))
         )}
@@ -145,12 +194,14 @@ export default function AdminDoctorsPage() {
           <form onSubmit={handleAddDoctor} className="bg-white rounded-3xl w-full max-w-md shadow-2xl border border-slate-100 p-6 space-y-5 animate-scale-in">
             <div className="flex justify-between items-center border-b border-slate-100 pb-4">
               <div>
-                <h2 className="text-xl font-bold text-slate-950 font-outfit">Register Doctor</h2>
+                <h2 className="text-xl font-bold text-slate-950 font-outfit">
+                  {editingDoctorId ? "Edit Doctor Details" : "Register Doctor"}
+                </h2>
                 <p className="text-xs text-slate-400 font-bold mt-0.5">Under Hospital: {adminCode}</p>
               </div>
               <button
                 type="button"
-                onClick={() => setShowAddModal(false)}
+                onClick={handleCloseModal}
                 className="text-slate-400 hover:text-slate-900 p-1"
               >
                 <X size={20} />
@@ -210,7 +261,7 @@ export default function AdminDoctorsPage() {
             <div className="flex gap-3 pt-4 border-t border-slate-100 justify-end">
               <button
                 type="button"
-                onClick={() => setShowAddModal(false)}
+                onClick={handleCloseModal}
                 className="px-5 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-sm transition"
               >
                 Cancel
@@ -219,7 +270,7 @@ export default function AdminDoctorsPage() {
                 type="submit"
                 className="px-6 py-3 rounded-2xl bg-teal-600 text-white hover:bg-teal-700 shadow-md shadow-teal-600/10 font-bold text-sm transition"
               >
-                Register Doctor
+                {editingDoctorId ? "Save Changes" : "Register Doctor"}
               </button>
             </div>
           </form>

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Delete, Patch, Param } from '@nestjs/common';
 import { DatabaseService } from '../../config/database.service';
 import { FallbackDbService } from '../../config/fallback-db.service';
 
@@ -45,6 +45,43 @@ export class AdminController {
       return rows[0];
     } catch {
       return this.fallbackDbService.addUser(body);
+    }
+  }
+
+  @Delete('users/:id')
+  async deleteUser(@Param('id') id: string) {
+    try {
+      await this.databaseService.query('DELETE FROM users WHERE id = $1', [id]);
+      this.fallbackDbService.deleteUser(id);
+      return { success: true };
+    } catch {
+      const success = this.fallbackDbService.deleteUser(id);
+      return { success };
+    }
+  }
+
+  @Patch('users/:id')
+  async updateUser(@Param('id') id: string, @Body() body: any) {
+    try {
+      await this.databaseService.query(
+        `UPDATE users
+         SET name = COALESCE($1, name),
+             email = COALESCE($2, email),
+             password = COALESCE($3, password),
+             specialty_or_department = COALESCE($4, specialty_or_department)
+         WHERE id = $5`,
+        [
+          body.name || null,
+          body.email || null,
+          body.password || null,
+          body.specialtyOrDepartment || null,
+          id
+        ]
+      );
+      const updated = this.fallbackDbService.updateUser(id, body);
+      return updated;
+    } catch {
+      return this.fallbackDbService.updateUser(id, body);
     }
   }
 }
