@@ -1,29 +1,56 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UnauthorizedException,
+} from '@nestjs/common';
+
+import { DatabaseService } from '../../config/database.service';
 
 @Controller()
 export class AuthController {
+  constructor(
+    private readonly databaseService: DatabaseService,
+  ) {}
+
   @Post('auth/login')
-  login(@Body() body: { email?: string; password?: string; role?: string }) {
+  async login(
+    @Body()
+    body: {
+      email: string;
+      password: string;
+    },
+  ) {
+    const users = await this.databaseService.query(
+      `
+      SELECT *
+      FROM users
+      WHERE email = $1
+      `,
+      [body.email],
+    );
+
+    const user = users[0];
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    if (user.password !== body.password) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
     return {
-      token: 'pulsegrid-demo-token',
-      user: {
-        id: 'U-1001',
-        name: 'Dr. Sarah Johnson',
-        role: body.role || 'doctor',
-        email: body.email || 'doctor@pulsegrid.local',
-      },
-      message: 'Backend login is ready. Replace with real JWT auth later.',
+      token: 'pulsegrid-token',
+      user,
     };
   }
 
   @Get('auth/profile')
   profile() {
     return {
-      id: 'U-1001',
-      name: 'Dr. Sarah Johnson',
-      role: 'doctor',
-      hospital: 'CityCare General',
-      status: 'active',
+      status: 'ok',
     };
   }
 }
