@@ -60,6 +60,8 @@ export class FallbackDbService implements OnModuleInit {
             { id: 'U-1001', hospitalCode: 'CITYHOSP01', role: 'Doctor', name: 'Dr. Sarah Johnson', email: 'doctor@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: 'Cardiologist' },
             { id: 'U-1002', hospitalCode: 'CITYHOSP01', role: 'Nurse', name: 'Nancy Wheeler', email: 'nurse@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: 'Emergency Department' },
             { id: 'U-1003', hospitalCode: 'CITYHOSP01', role: 'Patient', name: 'Arjun Sharma', email: 'patient@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: null },
+            { id: 'U-1008', hospitalCode: 'CITYHOSP01', role: 'Patient', name: 'Meera Iyer', email: 'meera@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: null },
+            { id: 'U-1010', hospitalCode: 'CITYHOSP01', role: 'Patient', name: 'Vikram Reddy', email: 'vikram@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: null },
             { id: 'U-1004', hospitalCode: 'CITYHOSP01', role: 'Lab Tech', name: 'Ravi Thomas', email: 'lab@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: 'Pathology Lab' },
             { id: 'U-1005', hospitalCode: 'CITYHOSP01', role: 'Hospital Admin', name: 'Jordan Lee', email: 'hospital.admin@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: 'Platform Operations' }
           ];

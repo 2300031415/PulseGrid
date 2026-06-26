@@ -20,6 +20,7 @@ type Patient = {
   labTest?: string;
   labTests?: LabTestItem[];
   hospitalCode?: string;
+  productId?: string | null;
 };
 
 export default function PatientsPage() {
@@ -243,7 +244,9 @@ export default function PatientsPage() {
                     <tr key={patient.id} className="hover:bg-slate-50/40 transition">
                       <td className="p-5">
                         <div className="font-bold text-slate-900">{patient.name}</div>
-                        <div className="text-xs text-slate-400 font-bold mt-0.5">{patient.id}</div>
+                        <div className="text-xs text-slate-400 font-bold mt-0.5">
+                          ID: {patient.id} {patient.productId ? `• Product: ${patient.productId}` : ""}
+                        </div>
                       </td>
                       <td className="text-slate-600">{patient.ward}</td>
                       <td className="text-slate-600">{patient.age}</td>
