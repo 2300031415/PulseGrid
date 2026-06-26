@@ -6,11 +6,11 @@ export default function DoctorLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex bg-[#F8FCFC]">
+    <div className="flex flex-col lg:flex-row bg-[#F8FCFC] min-h-screen">
 
       <Sidebar />
 
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-4 md:p-8 lg:max-h-screen lg:overflow-y-auto">
         {children}
       </main>
 

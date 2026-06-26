@@ -44,7 +44,7 @@ export default function PatientHeader({ patient }: { patient?: PatientRecord }) 
         </div>
       </div>
 
-      <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="mt-6 grid gap-3 grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {meta.map((item) => (
           <article key={item.label} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs uppercase tracking-[0.25em] text-slate-500">{item.label}</p>
