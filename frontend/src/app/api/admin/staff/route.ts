@@ -77,6 +77,7 @@ export async function POST(req: NextRequest) {
         labTest: "None",
         labTests: [],
         hospitalCode: body.hospitalCode || "CITYHOSP01",
+        productId: body.productId || null,
       };
       db.patients.push(newPatient);
     }

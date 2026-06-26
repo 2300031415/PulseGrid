@@ -11,6 +11,7 @@ type Patient = {
   hospitalCode: string;
   age?: number;
   ward?: string;
+  productId?: string;
 };
 
 export default function AdminPatientsPage() {
@@ -21,11 +22,13 @@ export default function AdminPatientsPage() {
   // Form State
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [productId, setProductId] = useState("");
   const [password, setPassword] = useState("PulseGrid@2026");
   const [age, setAge] = useState(45);
   const [ward, setWard] = useState("General");
   const [doctor, setDoctor] = useState("Dr. Sarah Johnson");
   const [adminCode, setAdminCode] = useState("CITYHOSP01");
+  const [doctors, setDoctors] = useState<any[]>([]);
 
   const fetchPatients = () => {
     const stored = localStorage.getItem("pulsegrid_user");
@@ -37,6 +40,18 @@ export default function AdminPatientsPage() {
       .then((data) => {
         if (Array.isArray(data)) {
           setPatients(data);
+        }
+      })
+      .catch(() => undefined);
+
+    fetch(`/api/admin/staff?role=Doctor&hospitalCode=${code}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setDoctors(data);
+          if (data.length > 0) {
+            setDoctor(data[0].name);
+          }
         }
       })
       .catch(() => undefined);
@@ -58,6 +73,7 @@ export default function AdminPatientsPage() {
           role: "Patient",
           name,
           email,
+          productId,
           password,
           age,
           ward,
@@ -69,9 +85,10 @@ export default function AdminPatientsPage() {
       if (res.ok) {
         setName("");
         setEmail("");
+        setProductId("");
         setAge(45);
         setWard("General");
-        setDoctor("Dr. Sarah Johnson");
+        setDoctor(doctors.length > 0 ? doctors[0].name : "Dr. Sarah Johnson");
         setShowAddModal(false);
         fetchPatients();
       }
@@ -136,6 +153,12 @@ export default function AdminPatientsPage() {
                   <Mail size={14} className="text-slate-400" />
                   <span className="truncate">{patient.email}</span>
                 </div>
+                {patient.productId && (
+                  <div className="flex items-center gap-2">
+                    <Activity size={14} className="text-teal-500" />
+                    <span className="text-slate-700">Product: {patient.productId}</span>
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <ShieldCheck size={14} className="text-slate-400" />
                   <span>ID: {patient.id}</span>
@@ -190,6 +213,17 @@ export default function AdminPatientsPage() {
               </div>
 
               <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Product ID</label>
+                <input
+                  type="text"
+                  value={productId}
+                  onChange={(e) => setProductId(e.target.value)}
+                  placeholder="e.g. PG-DEVICE-099"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-teal-500 text-sm font-semibold"
+                />
+              </div>
+
+              <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Password (Generated)</label>
                 <input
                   type="text"
@@ -227,14 +261,28 @@ export default function AdminPatientsPage() {
 
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Attending Doctor</label>
-                <input
-                  type="text"
-                  required
-                  value={doctor}
-                  onChange={(e) => setDoctor(e.target.value)}
-                  placeholder="e.g. Dr. Sarah Johnson"
-                  className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-teal-500 text-sm font-semibold"
-                />
+                <div className="relative">
+                  <select
+                    value={doctor}
+                    onChange={(e) => setDoctor(e.target.value)}
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-teal-500 text-sm font-semibold cursor-pointer appearance-none bg-white"
+                  >
+                    {doctors.length === 0 ? (
+                      <option value="Dr. Sarah Johnson">Dr. Sarah Johnson</option>
+                    ) : (
+                      doctors.map((doc) => (
+                        <option key={doc.id} value={doc.name}>
+                          {doc.name}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
 

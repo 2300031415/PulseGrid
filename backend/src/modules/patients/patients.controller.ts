@@ -64,6 +64,7 @@ export class PatientsController {
       currentTreatmentDetails: row.currentTreatmentDetails || row.current_treatment_details || null,
       riskDetails: row.riskDetails || row.risk_details || null,
       medications: parsedMedications,
+      productId: row.productId || row.product_id || null,
     };
   }
 

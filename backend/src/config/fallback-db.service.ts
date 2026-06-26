@@ -280,6 +280,7 @@ export class FallbackDbService implements OnModuleInit {
         ward: user.ward || 'General',
         doctor: user.doctor || 'Dr. Sarah Johnson',
         hospitalCode: user.hospitalCode,
+        productId: user.productId || null,
       });
     }
 
