@@ -76,6 +76,8 @@
       "labTest": "None"
     },
     {
+      "hospitalCode": "CITYHOSP01",
+      "labTests": [],
       "id": "P-1004",
       "ward": "General",
       "hr": 80,
@@ -87,10 +89,8 @@
       "room": "TBD",
       "risk": "Low",
       "labTest": "None",
-      "labTests": [],
       "name": "Meera Iyer",
-      "age": 40,
-      "hospitalCode": "CITYHOSP01"
+      "age": 40
     }
   ],
   "alerts": [

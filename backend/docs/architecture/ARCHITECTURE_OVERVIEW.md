@@ -10,7 +10,7 @@ PulseGrid is a healthcare monitoring and operations platform focused on:
 ## 2. Main components
 
 ### Frontend
-- Location: pulsegrid-ui/
+- Location: frontend/
 - Stack: Next.js + React + TypeScript
 - Responsibility: landing pages, login flows, dashboards, UI components, role-based views
 
@@ -20,7 +20,7 @@ PulseGrid is a healthcare monitoring and operations platform focused on:
 - Responsibility: REST API, auth, hospital logic, dashboards, monitoring services, alerts, health endpoints
 
 ### Deployment / Infrastructure
-- Location: deployment/
+- Location: backend/deployment/
 - Responsibility: Docker, PostgreSQL, Redis, MinIO, Prometheus, Grafana, Nginx, environment configuration
 
 ## 3. Runtime flow
@@ -38,7 +38,7 @@ PulseGrid is a healthcare monitoring and operations platform focused on:
 
 ## 5. Local development flow
 - Start backend: backend npm run start:dev
-- Start frontend: pulsegrid-ui npm run dev
+- Start frontend: frontend npm run dev
 - Use deployment scripts for containers and environment setup in production
 
 ## 6. Operational notes

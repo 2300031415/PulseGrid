@@ -30,4 +30,4 @@ Deployment notes:
 - Keep all tenant-specific queries scoped with hospital_id.
 - Use Redis for live vitals and alerts.
 - Use MinIO/S3 for reports and images.
-- Leave the current Next.js UI in pulsegrid-ui untouched and connect it through the API gateway.
+- Leave the current Next.js UI in frontend untouched and connect it through the API gateway.

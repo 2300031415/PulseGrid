@@ -10,7 +10,7 @@ Open two terminals from the repository root.
 
 Frontend:
 ```powershell
-cd D:\Pulsegrid\pulsegrid-ui
+cd frontend
 npm install
 ```
 
@@ -30,7 +30,7 @@ npm run start:dev
 ### 3) Start the frontend
 
 ```powershell
-cd D:\Pulsegrid\pulsegrid-ui
+cd frontend
 npm run dev
 ```
 
@@ -41,7 +41,7 @@ Open the app here:
 
 ### Frontend
 ```powershell
-cd D:\Pulsegrid\pulsegrid-ui
+cd frontend
 npm run dev
 npm run build
 npm run start
@@ -66,16 +66,16 @@ Get-NetTCPConnection -LocalPort 3000 -State Listen | Select-Object -ExpandProper
 Then start the frontend again:
 
 ```powershell
-cd D:\Pulsegrid\pulsegrid-ui
+cd frontend
 npm run dev
 ```
 
 ## Project layout
 
-- pulsegrid-ui/     - Next.js frontend UI
+- frontend/         - Next.js frontend UI
 - backend/          - NestJS backend API and modules
-- deployment/       - Docker, env, monitoring, and infra setup
-- architecture/     - Architecture notes and system overview
+- backend/deployment/ - Docker, env, monitoring, and infra setup
+- backend/docs/architecture/ - Architecture notes and system overview
 
 ## Notes
 
