@@ -298,14 +298,10 @@ export default function PatientProfilePage() {
 
     // 1. ECG scrolling wave generator tick loop
     const ecgInterval = setInterval(() => {
-      tickRef.current += 1;
       const currentHR = liveVitalsRef.current?.hr;
-      if (!currentHR) {
-        const newPoints = [...pointsRef.current.slice(1), 96];
-        pointsRef.current = newPoints;
-        setLivePoints(newPoints);
-        return;
-      }
+      if (!currentHR) return;
+
+      tickRef.current += 1;
       const period = Math.max(10, Math.floor(2000 / currentHR));
       const phase = tickRef.current % period;
 
@@ -335,6 +331,15 @@ export default function PatientProfilePage() {
           .then((data) => {
             if (data) {
               const hasTelemetry = data.hr !== null && data.hr !== undefined;
+              
+              // Clear ECG waves if telemetry is inactive
+              if (!hasTelemetry) {
+                if (pointsRef.current.some(p => p !== 96)) {
+                  pointsRef.current = new Array(100).fill(96);
+                  setLivePoints([]);
+                }
+              }
+
               const updatedVitals = {
                 hr: hasTelemetry ? Number(data.hr) : null,
                 spo2: hasTelemetry ? Number(data.spo2) : null,
