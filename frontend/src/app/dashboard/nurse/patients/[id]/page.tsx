@@ -66,18 +66,19 @@ export default function NursePatientProfilePage() {
   const [availableDevices, setAvailableDevices] = useState<string[]>([]);
   const [connectedDevice, setConnectedDevice] = useState<string | null>(null);
 
-  const [liveVitals, setLiveVitals] = useState<{ hr: number; spo2: number; temp: number; resp: number } | undefined>(undefined);
+  const [liveVitals, setLiveVitals] = useState<{ hr: number | null; spo2: number | null; temp: number | null; resp: number | null } | undefined>(undefined);
   const [livePoints, setLivePoints] = useState<number[]>([]);
 
   const pointsRef = useRef<number[]>(new Array(100).fill(96));
   const tickRef = useRef(0);
-  const liveVitalsRef = useRef({ hr: 82, spo2: 98, temp: 36.8, resp: 18 });
+  const liveVitalsRef = useRef<{ hr: number | null; spo2: number | null; temp: number | null; resp: number | null }>({ hr: 82, spo2: 98, temp: 36.8, resp: 18 });
   const connectedDeviceRef = useRef<string | null>(null);
+  const isPhysicalDeviceRef = useRef(false);
 
-  // Clean up database vitals on unmount if device was connected
+  // Clean up database vitals on unmount if device was connected and NOT a physical device
   useEffect(() => {
     return () => {
-      if (connectedDeviceRef.current && params?.id) {
+      if (connectedDeviceRef.current && !isPhysicalDeviceRef.current && params?.id) {
         fetch(`/api/doctor/patients/${params.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -103,12 +104,26 @@ export default function NursePatientProfilePage() {
       .then((data) => {
         setPatient(data);
         if (data) {
+          const initialHR = data.hr !== null && data.hr !== undefined ? Number(data.hr) : null;
+          const initialSpO2 = data.spo2 !== null && data.spo2 !== undefined ? Number(data.spo2) : null;
+
           liveVitalsRef.current = {
-            hr: data.hr ?? 82,
-            spo2: data.spo2 ?? 98,
-            temp: 36.8,
-            resp: 18
+            hr: initialHR,
+            spo2: initialSpO2,
+            temp: initialHR ? 36.8 : null,
+            resp: initialHR ? 18 : null
           };
+          if (data.productId) {
+            isPhysicalDeviceRef.current = true;
+            setConnectedDevice(data.productId);
+            connectedDeviceRef.current = data.productId;
+            setLiveVitals({
+              hr: initialHR,
+              spo2: initialSpO2,
+              temp: initialHR ? 36.8 : null,
+              resp: initialHR ? 18 : null
+            });
+          }
         }
       })
       .catch(() => undefined);
@@ -131,17 +146,20 @@ export default function NursePatientProfilePage() {
   const connectDevice = (device: string) => {
     setConnectedDevice(device);
     connectedDeviceRef.current = device;
+    isPhysicalDeviceRef.current = false; // Manually scanned simulated device
     setShowDeviceList(false);
     // Initialize live vital display
     setLiveVitals({ ...liveVitalsRef.current });
   };
 
   const disconnectDevice = () => {
+    const isPhysical = isPhysicalDeviceRef.current;
     setConnectedDevice(null);
     connectedDeviceRef.current = null;
+    isPhysicalDeviceRef.current = false;
     setLiveVitals(undefined);
     setLivePoints([]);
-    if (params?.id) {
+    if (params?.id && !isPhysical) {
       fetch(`/api/doctor/patients/${params.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -277,7 +295,13 @@ export default function NursePatientProfilePage() {
     // 1. ECG scrolling wave generator tick loop
     const ecgInterval = setInterval(() => {
       tickRef.current += 1;
-      const currentHR = liveVitalsRef.current.hr;
+      const currentHR = liveVitalsRef.current?.hr;
+      if (!currentHR) {
+        const newPoints = [...pointsRef.current.slice(1), 96];
+        pointsRef.current = newPoints;
+        setLivePoints(newPoints);
+        return;
+      }
       const period = Math.max(10, Math.floor(2000 / currentHR));
       const phase = tickRef.current % period;
 
@@ -299,42 +323,33 @@ export default function NursePatientProfilePage() {
       setLivePoints(newPoints);
     }, 35);
 
-    // 2. Vitals fluctuation and DB save loop
+    // 2. Vitals updates loop: poll DB if device is connected (updated via MQTT)
     const vitalsInterval = setInterval(() => {
-      const baseHR = patient?.hr ?? 82;
-      const baseSpO2 = patient?.spo2 ?? 98;
-
-      const hrOffset = Math.floor(Math.random() * 5) - 2; // -2 to +2
-      const spo2Offset = Math.floor(Math.random() * 3) - 1; // -1 to +1
-
-      const nextHR = Math.max(60, Math.min(125, baseHR + hrOffset));
-      const nextSpO2 = Math.max(92, Math.min(100, baseSpO2 + spo2Offset));
-      const nextTemp = 36.4 + Math.random() * 0.7;
-      const nextResp = 15 + Math.floor(Math.random() * 5);
-
-      const nextVitals = {
-        hr: nextHR,
-        spo2: nextSpO2,
-        temp: nextTemp,
-        resp: nextResp
-      };
-
-      liveVitalsRef.current = nextVitals;
-      setLiveVitals(nextVitals);
-
-      // Save to database
       if (params?.id) {
-        fetch(`/api/doctor/patients/${params.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            hr: nextHR,
-            spo2: nextSpO2,
-            status: nextHR > 100 || nextSpO2 < 95 ? "Warning" : (patient?.status ?? "Stable")
+        fetch(`/api/doctor/patients/${params.id}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data) {
+              const hasTelemetry = data.hr !== null && data.hr !== undefined;
+              const updatedVitals = {
+                hr: hasTelemetry ? Number(data.hr) : null,
+                spo2: hasTelemetry ? Number(data.spo2) : null,
+                temp: hasTelemetry ? (liveVitalsRef.current?.temp ?? (36.4 + Math.random() * 0.7)) : null,
+                resp: hasTelemetry ? (liveVitalsRef.current?.resp ?? (15 + Math.floor(Math.random() * 5))) : null,
+              };
+              // Add minor fluctuations to temp and resp to keep them visually dynamic
+              if (hasTelemetry && updatedVitals.temp && updatedVitals.resp) {
+                updatedVitals.temp = Math.max(36.0, Math.min(38.5, updatedVitals.temp + (Math.random() * 0.1 - 0.05)));
+                updatedVitals.resp = Math.max(12, Math.min(24, updatedVitals.resp + (Math.floor(Math.random() * 3) - 1)));
+              }
+
+              liveVitalsRef.current = updatedVitals as any;
+              setLiveVitals(updatedVitals as any);
+            }
           })
-        }).catch(() => undefined);
+          .catch(() => undefined);
       }
-    }, 3000);
+    }, 2000);
 
     return () => {
       clearInterval(ecgInterval);
@@ -352,7 +367,7 @@ export default function NursePatientProfilePage() {
     const spo2 = activeVitals?.spo2 ?? patient?.spo2 ?? "--";
     const temp = activeVitals?.temp ? `${activeVitals.temp.toFixed(1)}°C` : "--";
     const resp = activeVitals?.resp ? `${activeVitals.resp}/min` : "--";
-    const status = activeVitals?.hr ? (activeVitals.hr > 100 || activeVitals.spo2 < 95 ? "Warning" : "Stable") : (patient?.status || "Stable");
+    const status = activeVitals?.hr ? (activeVitals.hr > 100 || (activeVitals.spo2 !== null && activeVitals.spo2 !== undefined && activeVitals.spo2 < 95) ? "Warning" : "Stable") : (patient?.status || "Stable");
     const doctor = patient?.doctor || "Dr. Sarah Johnson";
     const hospital = patient?.hospitalName || "City General Hospital";
 

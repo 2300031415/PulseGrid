@@ -4,20 +4,31 @@ export default function LiveVitals({
   liveVitals, 
   status = "offline" 
 }: { 
-  liveVitals?: { hr: number; spo2: number; temp: number; resp: number }; 
+  liveVitals?: { hr: number | null; spo2: number | null; temp: number | null; resp: number | null }; 
   status?: "live" | "historical" | "offline";
 }) {
   const hasData = status !== "offline";
 
-  const currentHR = hasData && liveVitals ? `${liveVitals.hr} bpm` : "--";
-  const currentSpO2 = hasData && liveVitals ? `${liveVitals.spo2}%` : "--";
-  const currentTemp = hasData && liveVitals ? `${liveVitals.temp.toFixed(1)}°C` : "--";
-  const currentResp = hasData && liveVitals ? `${liveVitals.resp}/min` : "--";
+  const currentHR = hasData && liveVitals && liveVitals.hr !== null && liveVitals.hr !== undefined ? `${liveVitals.hr} bpm` : "--";
+  const currentSpO2 = hasData && liveVitals && liveVitals.spo2 !== null && liveVitals.spo2 !== undefined ? `${liveVitals.spo2}%` : "--";
+  const currentTemp = hasData && liveVitals && liveVitals.temp !== null && liveVitals.temp !== undefined ? `${liveVitals.temp.toFixed(1)}°C` : "--";
+  const currentResp = hasData && liveVitals && liveVitals.resp !== null && liveVitals.resp !== undefined ? `${liveVitals.resp}/min` : "--";
 
-  const hrDetail = hasData && liveVitals ? (liveVitals.hr > 100 ? "Tachycardia alert" : "Normal sinus rhythm") : "Connect monitor to stream";
-  const spo2Detail = hasData && liveVitals ? (liveVitals.spo2 < 95 ? "Hypoxia risk alert" : "Oxygen saturation stable") : "Connect monitor to stream";
-  const tempDetail = hasData && liveVitals ? "Within normal range" : "Connect monitor to stream";
-  const respDetail = hasData && liveVitals ? "Steady breathing rate" : "Connect monitor to stream";
+  const hrDetail = hasData && liveVitals && liveVitals.hr !== null && liveVitals.hr !== undefined 
+    ? (liveVitals.hr > 100 ? "Tachycardia alert" : "Normal sinus rhythm") 
+    : (status === "offline" ? "Connect monitor to stream" : "Waiting for telemetry feed...");
+    
+  const spo2Detail = hasData && liveVitals && liveVitals.spo2 !== null && liveVitals.spo2 !== undefined 
+    ? (liveVitals.spo2 < 95 ? "Hypoxia risk alert" : "Oxygen saturation stable") 
+    : (status === "offline" ? "Connect monitor to stream" : "Waiting for telemetry feed...");
+    
+  const tempDetail = hasData && liveVitals && liveVitals.temp !== null && liveVitals.temp !== undefined 
+    ? "Within normal range" 
+    : (status === "offline" ? "Connect monitor to stream" : "Waiting for telemetry feed...");
+    
+  const respDetail = hasData && liveVitals && liveVitals.resp !== null && liveVitals.resp !== undefined 
+    ? "Steady breathing rate" 
+    : (status === "offline" ? "Connect monitor to stream" : "Waiting for telemetry feed...");
 
   const vitals = [
     { label: "Heart Rate", value: currentHR, detail: hrDetail, icon: Heart, accent: hasData ? "text-rose-500" : "text-slate-400" },
