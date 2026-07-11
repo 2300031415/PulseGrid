@@ -60,8 +60,6 @@ export class FallbackDbService implements OnModuleInit {
             { id: 'U-1001', hospitalCode: 'CITYHOSP01', role: 'Doctor', name: 'Dr. Sarah Johnson', email: 'doctor@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: 'Cardiologist' },
             { id: 'U-1002', hospitalCode: 'CITYHOSP01', role: 'Nurse', name: 'Nancy Wheeler', email: 'nurse@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: 'Emergency Department' },
             { id: 'U-1003', hospitalCode: 'CITYHOSP01', role: 'Patient', name: 'Arjun Sharma', email: 'patient@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: null },
-            { id: 'U-1008', hospitalCode: 'CITYHOSP01', role: 'Patient', name: 'Meera Iyer', email: 'meera@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: null },
-            { id: 'U-1010', hospitalCode: 'CITYHOSP01', role: 'Patient', name: 'Vikram Reddy', email: 'vikram@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: null },
             { id: 'U-1004', hospitalCode: 'CITYHOSP01', role: 'Lab Tech', name: 'Ravi Thomas', email: 'lab@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: 'Pathology Lab' },
             { id: 'U-1005', hospitalCode: 'CITYHOSP01', role: 'Hospital Admin', name: 'Jordan Lee', email: 'hospital.admin@pulsegrid.health', password: 'PulseGrid@2026', specialtyOrDepartment: 'Platform Operations' }
           ];
@@ -80,19 +78,6 @@ export class FallbackDbService implements OnModuleInit {
               tests = [
                 { id: 'LT-1043-1', name: 'CBC', status: 'Pending', pdfFilename: null, pdfData: null },
                 { id: 'LT-1043-2', name: 'Lipid Panel', status: 'Pending', pdfFilename: null, pdfData: null },
-              ];
-            }
-            if (p.id === 'P-1044') {
-              labTest = 'CRP, ECG Study';
-              tests = [
-                { id: 'LT-1044-1', name: 'CRP', status: 'Pending', pdfFilename: null, pdfData: null },
-                { id: 'LT-1044-2', name: 'ECG Study', status: 'Pending', pdfFilename: null, pdfData: null },
-              ];
-            }
-            if (p.id === 'P-1045') {
-              labTest = 'Urinalysis';
-              tests = [
-                { id: 'LT-1045-1', name: 'Urinalysis', status: 'Pending', pdfFilename: null, pdfData: null },
               ];
             }
             return {

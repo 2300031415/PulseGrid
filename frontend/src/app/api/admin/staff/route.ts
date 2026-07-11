@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import fs from "fs";
 import path from "path";
 
-const BACKEND = "http://localhost:4000";
+const BACKEND = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 const DB_FILE = path.join(process.cwd(), "..", "backend", "database-fallback.json");
 
 function readDB(): Record<string, any[]> {

@@ -12,41 +12,12 @@ export const patients = [
     doctor: 'Dr. Sarah Johnson',
     room: 'A-12',
     risk: 'Low',
-  },
-  {
-    id: 'P-1044',
-    name: 'Meera Iyer',
-    ward: 'ICU-A',
-    age: 71,
-    hr: null,
-    spo2: null,
-    status: 'Critical',
-    recovery: 45,
-    condition: 'Respiratory distress review',
-    doctor: 'Dr. Sarah Johnson',
-    room: 'A-14',
-    risk: 'High',
-  },
-  {
-    id: 'P-1045',
-    name: 'Vikram Reddy',
-    ward: 'ICU-B',
-    age: 58,
-    hr: null,
-    spo2: null,
-    status: 'Warning',
-    recovery: 64,
-    condition: 'Post-surgery observation',
-    doctor: 'Dr. Sarah Johnson',
-    room: 'B-03',
-    risk: 'Medium',
-  },
+    productId: 'ID-001',
+  }
 ];
 
 export const alerts = [
-  { id: 1, title: 'Low SpO₂', patient: 'Meera Iyer', severity: 'Critical', time: '11:42 AM' },
-  { id: 2, title: 'High Heart Rate', patient: 'Arjun Sharma', severity: 'Warning', time: '09:12 AM' },
-  { id: 3, title: 'Medication Due', patient: 'Vikram Reddy', severity: 'Info', time: '08:02 AM' },
+  { id: 2, title: 'High Heart Rate', patient: 'Arjun Sharma', severity: 'Warning', time: '09:12 AM' }
 ];
 
 export const hospitals = [
