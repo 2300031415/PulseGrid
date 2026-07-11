@@ -27,7 +27,13 @@ BLE_NOTIFY_CHAR_UUID = "49535343-1e4d-4bd9-ba61-23c647249616"
 # ==========================================
 # MQTT CLIENT INITIALIZATION
 # ==========================================
-mqtt_client = mqtt.Client(client_id=f"pi_monitor_{PRODUCT_ID}")
+try:
+    # Support paho-mqtt v2.x versioning
+    mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id=f"pi_monitor_{PRODUCT_ID}")
+except AttributeError:
+    # Fallback for legacy paho-mqtt v1.x
+    mqtt_client = mqtt.Client(client_id=f"pi_monitor_{PRODUCT_ID}")
+    
 mqtt_client.username_pw_set(MQTT_USER, MQTT_PASSWORD)
 
 # Enable secure TLS connection (required by HiveMQ Cloud)
