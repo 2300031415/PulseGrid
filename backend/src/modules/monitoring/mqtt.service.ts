@@ -14,7 +14,7 @@ export class MqttService implements OnModuleInit, OnModuleDestroy {
   }
 
   private connectBroker() {
-    const brokerUrl = process.env.MQTT_BROKER_URL || 'mqtt://broker.hivemq.com:1883';
+    const brokerUrl = process.env.MQTT_BROKER_URL || 'mqtts://pulsegrid_device:Manoj@2005@7b173a77600e470095ca0e0ed1d6a582.s1.eu.hivemq.cloud:8883';
     this.logger.log(`Connecting to MQTT broker at: ${brokerUrl}`);
 
     try {
