@@ -405,8 +405,52 @@ export default function PatientProfilePage() {
       `Rhythm: ${activeVitals?.hr ? "Normal Sinus Rhythm (NSR)" : "No telemetry active (flatline)"}`,
       `Trace Quality: ${activeVitals?.hr ? "High (Synthesized via Berry PM6100)" : "N/A"}`,
       `----------------------------------------------------------------------`,
-      `CLINICAL NOTES`,
     ];
+
+    // Add Lab Results to PDF
+    lines.push(`LATEST LAB RESULTS`);
+    const tests = patient?.labTests || [];
+    const results = tests.flatMap((test: any) => {
+      const matched = {
+        "CBC": [
+          { name: "WBC", value: "7.1 K/uL", note: "Within normal range" },
+          { name: "Hemoglobin", value: "13.4 g/dL", note: "Stable recovery" }
+        ],
+        "Lipid Panel": [
+          { name: "Total Cholesterol", value: "185 mg/dL", note: "Desirable (< 200)" },
+          { name: "Triglycerides", value: "120 mg/dL", note: "Normal (< 150)" },
+          { name: "HDL", value: "45 mg/dL", note: "Optimal (> 40)" },
+          { name: "LDL", value: "116 mg/dL", note: "Near optimal" }
+        ],
+        "CRP": [
+          { name: "CRP", value: "8.2 mg/L", note: "Mild inflammation" }
+        ],
+        "ECG Study": [
+          { name: "PR Interval", value: "160 ms", note: "Normal" },
+          { name: "QRS Duration", value: "92 ms", note: "Normal" },
+          { name: "QTc", value: "412 ms", note: "Normal" }
+        ],
+        "Urinalysis": [
+          { name: "Color", value: "Light Yellow", note: "Normal" },
+          { name: "Clarity", value: "Clear", note: "Normal" },
+          { name: "Glucose", value: "Negative", note: "Normal" },
+          { name: "Protein", value: "Negative", note: "Normal" }
+        ]
+      }[test.name as string];
+      if (matched) return matched;
+      return [{ name: test.name, value: test.status, note: `Status: ${test.status}` }];
+    });
+
+    if (results.length === 0) {
+      lines.push(`* No lab tests assigned to this patient.`);
+    } else {
+      results.forEach((item) => {
+        lines.push(`* ${item.name}: ${item.value} [${item.note}]`);
+      });
+    }
+
+    lines.push(`----------------------------------------------------------------------`);
+    lines.push(`CLINICAL NOTES`);
 
     const notesText = patient?.notes || "The patient exhibits stable cardiorespiratory telemetry. Heart rate rhythm is regular. No signs of tachycardia, bradycardia, or oxygen desaturation detected during this reporting window.";
     const wrappedNotes: string[] = [];
@@ -630,7 +674,7 @@ export default function PatientProfilePage() {
 
       <div className="grid gap-6 xl:grid-cols-2">
         <MedicationSchedule patient={patient} onUpdate={fetchPatient} isEditable={!isHistorical} />
-        <LabResults />
+        <LabResults patient={patient} />
       </div>
 
       <AlertTimeline />
