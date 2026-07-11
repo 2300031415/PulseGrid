@@ -45,7 +45,7 @@ export default function LabResults({ patient }: { patient: any }) {
         {results.length === 0 ? (
           <p className="text-slate-400 text-sm py-4 text-center font-medium">No lab tests assigned to this patient.</p>
         ) : (
-          results.map((item) => (
+          results.map((item: any) => (
             <article key={item.name} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-slate-900">{item.name}</h3>

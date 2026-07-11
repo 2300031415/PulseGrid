@@ -444,7 +444,7 @@ export default function PatientProfilePage() {
     if (results.length === 0) {
       lines.push(`* No lab tests assigned to this patient.`);
     } else {
-      results.forEach((item) => {
+      results.forEach((item: any) => {
         lines.push(`* ${item.name}: ${item.value} [${item.note}]`);
       });
     }
