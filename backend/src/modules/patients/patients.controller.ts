@@ -103,14 +103,24 @@ export class PatientsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
+    let patient;
     try {
       const rows = await this.databaseService.query('SELECT * FROM patients WHERE id = $1', [id]);
-      return rows[0]
+      patient = rows[0]
         ? this.mapPatient(rows[0])
         : this.fallbackDbService.getPatientById(id) || this.fallbackDbService.getPatients()[0];
     } catch {
-      return this.fallbackDbService.getPatientById(id) || this.fallbackDbService.getPatients()[0];
+      patient = this.fallbackDbService.getPatientById(id) || this.fallbackDbService.getPatients()[0];
     }
+
+    if (patient && patient.productId) {
+      const lastTime = patient.lastTelemetry || 0;
+      if (Date.now() - lastTime > 15000) {
+        patient.hr = null;
+        patient.spo2 = null;
+      }
+    }
+    return patient;
   }
 
   @Get(':id/overview')

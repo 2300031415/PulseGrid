@@ -150,7 +150,19 @@ export class FallbackDbService implements OnModuleInit {
   }
 
   getPatientById(id: string) {
-    return this.data.patients.find((p) => p.id === id);
+    const patient = this.data.patients.find((p) => p.id === id);
+    if (patient && patient.productId) {
+      const lastTime = patient.lastTelemetry || 0;
+      // If telemetry hasn't been updated for more than 15 seconds, return nulls (standby/flatline)
+      if (Date.now() - lastTime > 15000) {
+        return {
+          ...patient,
+          hr: null,
+          spo2: null
+        };
+      }
+    }
+    return patient;
   }
 
   updatePatientLabTest(id: string, labTest: string) {
@@ -193,6 +205,11 @@ export class FallbackDbService implements OnModuleInit {
       if (vitals.risk !== undefined) patient.risk = vitals.risk;
       if (vitals.riskDetails !== undefined) patient.riskDetails = vitals.riskDetails;
       if (vitals.medications !== undefined) patient.medications = vitals.medications;
+      
+      // Update telemetry timestamp
+      if (vitals.hr !== null && vitals.hr !== undefined) {
+        patient.lastTelemetry = Date.now();
+      }
       
       this.save();
       return true;

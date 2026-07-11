@@ -31,9 +31,9 @@
       "name": "Arjun Sharma",
       "ward": "General",
       "age": 45,
-      "hr": null,
-      "spo2": null,
-      "status": "Stable",
+      "hr": 79,
+      "spo2": 94,
+      "status": "Warning",
       "recovery": 92,
       "condition": "Post-op cardiac monitoring (Updated)",
       "doctor": "Dr. Sarah Johnson",
@@ -64,7 +64,8 @@
           "note": "For swelling"
         }
       ],
-      "productId": "ID-001"
+      "productId": "ID-001",
+      "lastTelemetry": 1783791266191
     },
     {
       "hospitalCode": "CITYHOSP01",

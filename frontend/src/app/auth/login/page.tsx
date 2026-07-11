@@ -203,10 +203,6 @@ export default function LoginPage() {
 
               </div>
 
-              <p className="mt-4 rounded-2xl border border-teal-100 bg-teal-50 px-4 py-3 text-sm text-teal-800">
-                Demo credentials for {selectedRole}: {roleCredentials[selectedRole].email} / {roleCredentials[selectedRole].password}
-              </p>
-
               {error ? <p className="mt-3 text-sm text-rose-600">{error}</p> : null}
 
               <button
