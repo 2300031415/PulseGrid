@@ -131,7 +131,13 @@ export default function PatientProfilePage() {
 
   useEffect(() => {
     fetchPatient();
-  }, [params?.id]);
+    const interval = setInterval(() => {
+      if (!isHistorical) {
+        fetchPatient();
+      }
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [params?.id, isHistorical]);
 
   // Handle device scan simulation
   const startScanning = () => {

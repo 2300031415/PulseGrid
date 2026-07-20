@@ -99,35 +99,45 @@ export default function LabPatientProfilePage() {
   useEffect(() => {
     if (!params?.id) return;
 
-    fetch(`/api/doctor/patients/${params.id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setPatient(data);
-        if (data) {
-          const initialHR = data.hr !== null && data.hr !== undefined ? Number(data.hr) : null;
-          const initialSpO2 = data.spo2 !== null && data.spo2 !== undefined ? Number(data.spo2) : null;
+    const fetchPatientData = () => {
+      fetch(`/api/doctor/patients/${params.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setPatient(data);
+          if (data) {
+            const initialHR = data.hr !== null && data.hr !== undefined ? Number(data.hr) : null;
+            const initialSpO2 = data.spo2 !== null && data.spo2 !== undefined ? Number(data.spo2) : null;
 
-          liveVitalsRef.current = {
-            hr: initialHR,
-            spo2: initialSpO2,
-            temp: initialHR ? 36.8 : null,
-            resp: initialHR ? 18 : null
-          };
-          if (data.productId) {
-            isPhysicalDeviceRef.current = true;
-            setConnectedDevice(data.productId);
-            connectedDeviceRef.current = data.productId;
-            setLiveVitals({
+            liveVitalsRef.current = {
               hr: initialHR,
               spo2: initialSpO2,
               temp: initialHR ? 36.8 : null,
               resp: initialHR ? 18 : null
-            });
+            };
+            if (data.productId) {
+              isPhysicalDeviceRef.current = true;
+              setConnectedDevice(data.productId);
+              connectedDeviceRef.current = data.productId;
+              setLiveVitals({
+                hr: initialHR,
+                spo2: initialSpO2,
+                temp: initialHR ? 36.8 : null,
+                resp: initialHR ? 18 : null
+              });
+            }
           }
-        }
-      })
-      .catch(() => undefined);
-  }, [params?.id]);
+        })
+        .catch(() => undefined);
+    };
+
+    fetchPatientData();
+    const interval = setInterval(() => {
+      if (!isHistorical) {
+        fetchPatientData();
+      }
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [params?.id, isHistorical]);
 
   // Handle device scan simulation
   const startScanning = () => {
