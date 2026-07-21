@@ -65,6 +65,7 @@ export class PatientsController {
       riskDetails: row.riskDetails || row.risk_details || null,
       medications: parsedMedications,
       productId: row.productId || row.product_id || null,
+      ecgWaveform: row.ecgWaveform || null,
     };
   }
 

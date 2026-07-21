@@ -179,6 +179,7 @@ export class FallbackDbService implements OnModuleInit {
       if (vitals.spo2 !== undefined) patient.spo2 = vitals.spo2 === null ? null : Number(vitals.spo2);
       if (vitals.status !== undefined) patient.status = vitals.status;
       if (vitals.recovery !== undefined) patient.recovery = vitals.recovery === null ? null : Number(vitals.recovery);
+      if (vitals.ecgWaveform !== undefined) patient.ecgWaveform = vitals.ecgWaveform;
       
       // Clinical fields
       if (vitals.condition !== undefined) patient.condition = vitals.condition;

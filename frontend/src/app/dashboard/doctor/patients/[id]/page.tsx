@@ -308,7 +308,8 @@ export default function PatientProfilePage() {
       if (!currentHR) return;
 
       tickRef.current += 1;
-      const period = Math.max(10, Math.floor(2000 / currentHR));
+      // 1 cardiac cycle = (60000 / HR) ms. At 35ms per tick, period = (60000 / 35) / HR = 1714 / HR ticks.
+      const period = Math.max(10, Math.floor(1714 / currentHR));
       const phase = tickRef.current % period;
 
       let nextPoint = 96;
@@ -344,6 +345,21 @@ export default function PatientProfilePage() {
                   pointsRef.current = new Array(100).fill(96);
                   setLivePoints([]);
                 }
+              }
+
+              // If real waveform samples were published by hivemq_client.py
+              if (hasTelemetry && data.ecgWaveform && Array.isArray(data.ecgWaveform) && data.ecgWaveform.length > 0) {
+                const rawSamples: number[] = data.ecgWaveform;
+                const minVal = Math.min(...rawSamples);
+                const maxVal = Math.max(...rawSamples);
+                const range = (maxVal - minVal) || 1;
+                const mapped = rawSamples.map((v: number) => {
+                  const norm = (v - minVal) / range;
+                  return Math.round(150 - norm * 130);
+                });
+                while (mapped.length < 100) mapped.push(96);
+                pointsRef.current = mapped.slice(0, 100);
+                setLivePoints(pointsRef.current);
               }
 
               const updatedVitals = {

@@ -18,7 +18,7 @@ MQTT_USER = "pulsegrid_device"
 MQTT_PASSWORD = "Manoj@2005"
 
 # The Product ID registered to the patient (change to match patient setup, e.g., ID-001 or ID-003)
-PRODUCT_ID = "ID-001"
+PRODUCT_ID = "Device 321"
 
 # Berry PM6100 BLE UUIDs (standard Microchip GATT serial stream)
 BLE_SERVICE_UUID = "49535343-fe7d-4ae5-8fa9-9fafd205e455"

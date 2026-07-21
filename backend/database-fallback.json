@@ -1,0 +1,128 @@
+{
+  "hospitals": [
+    {
+      "id": "H-1001",
+      "name": "CityCare General",
+      "region": "North Wing",
+      "beds": 220,
+      "status": "Active"
+    },
+    {
+      "id": "H-1002",
+      "name": "PulseGrid Referral",
+      "region": "Central",
+      "beds": 180,
+      "status": "Active"
+    }
+  ],
+  "patients": [
+    {
+      "id": "P-1043",
+      "name": "Arjun Sharma",
+      "ward": "ICU-A",
+      "age": 64,
+      "hr": 78,
+      "spo2": 94,
+      "status": "Warning",
+      "recovery": 92,
+      "condition": "Post-op cardiac monitoring",
+      "doctor": "Dr. Sarah Johnson",
+      "room": "A-12",
+      "risk": "Low",
+      "productId": "ID-001",
+      "hospitalCode": "CITYHOSP01",
+      "labTest": "CBC, Lipid Panel",
+      "labTests": [
+        {
+          "id": "LT-1043-1",
+          "name": "CBC",
+          "status": "Pending",
+          "pdfFilename": null,
+          "pdfData": null
+        },
+        {
+          "id": "LT-1043-2",
+          "name": "Lipid Panel",
+          "status": "Pending",
+          "pdfFilename": null,
+          "pdfData": null
+        }
+      ],
+      "lastTelemetry": 1783801738542
+    }
+  ],
+  "alerts": [
+    {
+      "id": 2,
+      "title": "High Heart Rate",
+      "patient": "Arjun Sharma",
+      "severity": "Warning",
+      "time": "09:12 AM"
+    }
+  ],
+  "doctorProfile": {
+    "name": "Dr. Sarah Johnson",
+    "specialty": "Cardiologist",
+    "hospital": "City General Hospital",
+    "email": "sarah.johnson@pulsegrid.health",
+    "phone": "+1 415 555 0188",
+    "ward": "Cardiac ICU",
+    "notificationEmail": true,
+    "smsAlerts": true,
+    "monitoringMode": "Live telemetry"
+  },
+  "doctorSettings": {
+    "liveTelemetry": true,
+    "aiAlerts": true,
+    "autoRefresh": true,
+    "notifications": true,
+    "darkMode": false
+  },
+  "users": [
+    {
+      "id": "U-1001",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Doctor",
+      "name": "Dr. Sarah Johnson",
+      "email": "doctor@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Cardiologist"
+    },
+    {
+      "id": "U-1002",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Nurse",
+      "name": "Nancy Wheeler",
+      "email": "nurse@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Emergency Department"
+    },
+    {
+      "id": "U-1003",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Patient",
+      "name": "Arjun Sharma",
+      "email": "patient@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": null
+    },
+    {
+      "id": "U-1004",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Lab Tech",
+      "name": "Ravi Thomas",
+      "email": "lab@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Pathology Lab"
+    },
+    {
+      "id": "U-1005",
+      "hospitalCode": "CITYHOSP01",
+      "role": "Hospital Admin",
+      "name": "Jordan Lee",
+      "email": "hospital.admin@pulsegrid.health",
+      "password": "PulseGrid@2026",
+      "specialtyOrDepartment": "Platform Operations"
+    }
+  ]
+}
