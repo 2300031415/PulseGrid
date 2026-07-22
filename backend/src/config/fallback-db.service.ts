@@ -6,7 +6,16 @@ import { patients as defaultPatients, alerts as defaultAlerts, hospitals as defa
 @Injectable()
 export class FallbackDbService implements OnModuleInit {
   private readonly logger = new Logger(FallbackDbService.name);
-  private readonly filePath = path.join(process.cwd(), 'database-fallback.json');
+  private readonly filePath = (() => {
+    if (process.env.NODE_ENV === 'production') {
+      return path.join(process.cwd(), 'database-fallback.json');
+    }
+    const dir = path.join(require('os').homedir(), '.pulsegrid');
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    return path.join(dir, 'database-fallback.json');
+  })();
   private data: {
     hospitals: any[];
     patients: any[];
