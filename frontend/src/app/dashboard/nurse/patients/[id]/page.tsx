@@ -108,23 +108,26 @@ export default function NursePatientProfilePage() {
             const initialHR = data.hr !== null && data.hr !== undefined ? Number(data.hr) : null;
             const initialSpO2 = data.spo2 !== null && data.spo2 !== undefined ? Number(data.spo2) : null;
 
-            liveVitalsRef.current = {
+          const initialTemp = data.temp !== null && data.temp !== undefined ? Number(data.temp) : (initialHR ? 36.6 : null);
+          const initialResp = data.resp !== null && data.resp !== undefined ? Number(data.resp) : (initialHR ? 16 : null);
+
+          liveVitalsRef.current = {
+            hr: initialHR,
+            spo2: initialSpO2,
+            temp: initialTemp,
+            resp: initialResp
+          };
+          if (data.productId) {
+            isPhysicalDeviceRef.current = true;
+            setConnectedDevice(data.productId);
+            connectedDeviceRef.current = data.productId;
+            setLiveVitals({
               hr: initialHR,
               spo2: initialSpO2,
-              temp: initialHR ? 36.8 : null,
-              resp: initialHR ? 18 : null
-            };
-            if (data.productId) {
-              isPhysicalDeviceRef.current = true;
-              setConnectedDevice(data.productId);
-              connectedDeviceRef.current = data.productId;
-              setLiveVitals({
-                hr: initialHR,
-                spo2: initialSpO2,
-                temp: initialHR ? 36.8 : null,
-                resp: initialHR ? 18 : null
-              });
-            }
+              temp: initialTemp,
+              resp: initialResp
+            });
+          }
           }
         })
         .catch(() => undefined);
