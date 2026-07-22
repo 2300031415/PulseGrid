@@ -18,7 +18,7 @@ MQTT_USER = "pulsegrid_device"
 MQTT_PASSWORD = "Manoj@2005"
 
 # The Product ID registered to the patient (change to match patient setup, e.g., ID-001 or ID-003)
-PRODUCT_ID = "Device 321"
+PRODUCT_ID = "ID-001"
 
 # Berry PM6100 BLE UUIDs (standard Microchip GATT serial stream)
 BLE_SERVICE_UUID = "49535343-fe7d-4ae5-8fa9-9fafd205e455"
@@ -135,11 +135,11 @@ async def run_simulation_mode():
     resp = 16
     
     while True:
-        # Create minor normal fluctuations
-        hr = max(60, min(110, hr + random.choice([-1, 0, 1])))
+        # Create dynamic normal fluctuations
+        hr = max(60, min(110, hr + random.choice([-4, -3, -2, -1, 0, 1, 2, 3, 4])))
         spo2 = max(94, min(100, spo2 + random.choice([-1, 0, 1]) if random.random() > 0.7 else 0))
-        temp = max(36.1, min(37.5, temp + random.uniform(-0.05, 0.05)))
-        resp = max(12, min(22, resp + random.choice([-1, 0, 1]) if random.random() > 0.6 else 0))
+        temp = max(36.1, min(37.5, temp + random.uniform(-0.15, 0.15)))
+        resp = max(12, min(22, resp + random.choice([-2, -1, 0, 1, 2]) if random.random() > 0.6 else 0))
         
         publish_vitals(hr, spo2, resp, temp)
         await asyncio.sleep(2)

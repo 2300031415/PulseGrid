@@ -45,6 +45,8 @@ export class PatientsController {
       age: row.age ?? 58,
       hr: row.hr !== null && row.hr !== undefined ? Number(row.hr) : null,
       spo2: row.spo2 !== null && row.spo2 !== undefined ? Number(row.spo2) : null,
+      temp: row.temp !== null && row.temp !== undefined ? Number(row.temp) : null,
+      resp: row.resp !== null && row.resp !== undefined ? Number(row.resp) : null,
       status: row.status === 'ACTIVE' ? 'Stable' : (row.status || 'Stable'),
       recovery: row.recovery ?? 78,
       condition: row.diagnosis || row.condition || 'Monitoring in progress',

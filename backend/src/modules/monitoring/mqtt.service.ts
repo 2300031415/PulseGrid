@@ -81,6 +81,8 @@ export class MqttService implements OnModuleInit, OnModuleDestroy {
         const updates: any = {};
         if (hr !== undefined) updates.hr = Number(hr);
         if (spo2 !== undefined) updates.spo2 = Number(spo2);
+        if (temp !== undefined) updates.temp = Number(temp);
+        if (resp !== undefined) updates.resp = Number(resp);
         
         // Determine status warning thresholds
         if (hr !== undefined && spo2 !== undefined) {

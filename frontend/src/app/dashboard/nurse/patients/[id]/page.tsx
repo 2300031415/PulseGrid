@@ -365,13 +365,15 @@ export default function NursePatientProfilePage() {
               const updatedVitals = {
                 hr: hasTelemetry ? Number(data.hr) : null,
                 spo2: hasTelemetry ? Number(data.spo2) : null,
-                temp: hasTelemetry ? (liveVitalsRef.current?.temp ?? (36.4 + Math.random() * 0.7)) : null,
-                resp: hasTelemetry ? (liveVitalsRef.current?.resp ?? (15 + Math.floor(Math.random() * 5))) : null,
+                temp: hasTelemetry ? (data.temp !== null && data.temp !== undefined ? Number(data.temp) : (liveVitalsRef.current?.temp ?? 36.6)) : null,
+                resp: hasTelemetry ? (data.resp !== null && data.resp !== undefined ? Number(data.resp) : (liveVitalsRef.current?.resp ?? 16)) : null,
               };
-              // Add minor fluctuations to temp and resp to keep them visually dynamic
-              if (hasTelemetry && updatedVitals.temp && updatedVitals.resp) {
-                updatedVitals.temp = Math.max(36.0, Math.min(38.5, updatedVitals.temp + (Math.random() * 0.1 - 0.05)));
-                updatedVitals.resp = Math.max(12, Math.min(24, updatedVitals.resp + (Math.floor(Math.random() * 3) - 1)));
+              // Add minor fluctuations ONLY if the backend didn't supply dynamic temp/resp values
+              if (hasTelemetry && (data.temp === null || data.temp === undefined) && (data.resp === null || data.resp === undefined)) {
+                if (updatedVitals.temp && updatedVitals.resp) {
+                  updatedVitals.temp = Math.max(36.0, Math.min(38.5, updatedVitals.temp + (Math.random() * 0.1 - 0.05)));
+                  updatedVitals.resp = Math.max(12, Math.min(24, updatedVitals.resp + (Math.floor(Math.random() * 3) - 1)));
+                }
               }
 
               liveVitalsRef.current = updatedVitals as any;
