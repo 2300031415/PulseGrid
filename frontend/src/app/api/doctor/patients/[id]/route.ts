@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { patients as fallbackPatients } from "../../data";
 
+export const dynamic = "force-dynamic";
+
 const BACKEND = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 async function getBackendData(id: string) {
